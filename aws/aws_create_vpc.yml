@@ -28,3 +28,14 @@
           environment: dev
         state: present
       register: ansible_subnet
+
+    - name: Ensure internet gateway is present
+      ec2_vpc_igw:
+        vpc_id: "{{ ansible_vpc.vpc.id }}"
+        region: us-west-2
+        tags:
+          Name: ansible-igw
+          project: ansible-poc
+          environment: dev
+        state: present
+      register: igw
