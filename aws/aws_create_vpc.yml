@@ -4,14 +4,27 @@
   connection: local
 
   tasks:
-    - name: Ensure a VPC is present
+    - name: Ensure VPC is present
       ec2_vpc_net:
         name: ansible
         cidr_block: 10.0.0.0/16
         region: us-west-2
         tags:
-            Name: ansible-vpc
-            project: ansible-poc
-            environment: dev
+          Name: ansible-vpc
+          project: ansible-poc
+          environment: dev
         state: present
       register: ansible_vpc
+
+    - name: Ensure public subnet is present
+      ec2_vpc_subnet:
+        region: us-west-2
+        vpc_id: "{{ ansible_vpc.vpc.id }}"
+        cidr: 10.0.1.0/24
+        map_public: yes
+        tags:
+          Name: ansible-public-subnet
+          project: ansible-poc
+          environment: dev
+        state: present
+      register: ansible_subnet
