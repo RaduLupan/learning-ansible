@@ -1,0 +1,17 @@
+---
+- hosts: localhost
+  gather_facts: false
+  connection: local
+
+  tasks:
+    - name: Ensure a VPC is present
+      ec2_vpc_net:
+        name: ansible
+        cidr_block: 10.0.0.0/16
+        region: us-west-2
+        tags:
+            Name: ansible-vpc
+            project: ansible-poc
+            environment: dev
+        state: present
+      register: ansible_vpc
