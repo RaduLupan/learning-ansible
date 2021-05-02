@@ -25,3 +25,30 @@
         filters: 
           vpc-id: "{{ ansible_vpc.vpcs[0].vpc_id }}"
       register: ansible_subnet
+
+    - name: Ensure a security group is present
+      ec2_group:
+        name: windows-sg
+        description: windows sg
+        vpc_id: "{{ ansible_vpc.vpcs[0].vpc_id }}"
+        region: us-west-2
+        tags:
+          Name: windows
+          project: ansible-poc
+          environment: dev
+        rules:
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0
+            rule_desc: Allow traffic on port 80 from anywhere
+          - proto: tcp
+            from_port: 3389
+            to_port: 3389
+            cidr_ip: 0.0.0.0/0
+            rule_desc: Allow RDP traffic on port 3389 from anywhere
+          - proto: tcp
+            from_port: 5985
+            to_port: 5985
+            cidr_ip: 0.0.0.0/0
+            rule_desc: Allow WinRM over HTTP from anywhere
