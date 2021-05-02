@@ -39,3 +39,15 @@
           environment: dev
         state: present
       register: igw
+
+    - name: Ensure there is a route table, for public subnets with route to IGW
+      ec2_vpc_route_table:
+        vpc_id: "{{ ansible_vpc.vpc.id }}"
+        region: us-west-2
+        subnets:
+          - "{{ ansible_subnet.subnet.id }}"
+        routes:
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ igw.gateway_id }}"
+        tags:
+          Name: ansible-public
