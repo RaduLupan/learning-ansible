@@ -90,3 +90,10 @@
           environment: dev
           os: windows
       register: ec2
+
+    - name: Ensure elastic IP association is present for each EC2 instance
+      ec2_eip:
+        device_id: "{{ item }}"
+        release_on_disassociation: yes
+        region: us-west-2
+      loop: "{{ ec2.instance_ids }}"
