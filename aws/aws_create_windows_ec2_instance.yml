@@ -52,3 +52,41 @@
             to_port: 5985
             cidr_ip: 0.0.0.0/0
             rule_desc: Allow WinRM over HTTP from anywhere
+
+    - name: Ensure EC2 key pair is present
+      ec2_key: 
+        name: aws-ansible-key
+        region: us-west-2
+        state: present
+      register: ec2_key
+
+    - name: Ensure private key is saved to disk
+      copy: content="{{ ec2_key.key.private_key }}" dest="./aws-ansible-key.pem" mode=0600
+      when: ec2_key.changed
+
+    - name: Ensure Windows EC2 is present
+      ec2:
+        key_name: aws-ansible-key
+        instance_type: t3.micro
+        image: ami-0b7ebdd52b84c244d
+        region: us-west-2
+        group: windows-sg
+        count: 1
+        vpc_subnet_id: "{{ ansible_subnet.subnets[0].id }}"
+        user_data: |
+          <powershell>
+          $content = (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1' -UseBasicParsing).content
+          iex $content
+          $password = "{{ password }}" | ConvertTo-SecureString -AsPlainText -Force
+          New-LocalUser 'ansible' -Password $password
+          Add-LocalGroupMember -Group 'Administrators' -Member 'ansible'
+          </powershell>
+          <persist>true</persist>
+        wait: yes
+        assign_public_ip: yes
+        instance_tags:
+          Name: Win-Web01
+          project: ansible-poc
+          environment: dev
+          os: windows
+      register: ec2
