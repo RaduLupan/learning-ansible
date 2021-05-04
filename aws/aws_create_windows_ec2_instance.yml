@@ -52,6 +52,11 @@
             to_port: 5985
             cidr_ip: 0.0.0.0/0
             rule_desc: Allow WinRM over HTTP from anywhere
+          - proto: tcp
+            from_port: 5986
+            to_port: 5986
+            cidr_ip: 0.0.0.0/0
+            rule_desc: Allow WinRM over HTTPS from anywhere
 
     - name: Ensure EC2 key pair is present
       ec2_key: 
