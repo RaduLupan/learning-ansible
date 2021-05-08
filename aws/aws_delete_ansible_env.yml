@@ -37,3 +37,73 @@
         device_id: "{{ item }}"
         state: absent
       with_items: "{{ ec2_ids }}" 
+
+    - name: Sleep for 30 seconds
+      wait_for: 
+        timeout: 30
+      delegate_to: localhost
+
+    - name: Get security groups info
+      ec2_group_info:
+      region: us-west-2
+      filters:
+        group_name:
+          - webserver
+          - redis
+        vpc-id: "{{ ansible_vpc.vpcs[0].id }}"
+      register: sgs
+
+    - set_fact:
+        sg_ids: "{{ sg_ids }} + [ '{{ item.group_id }}' ]"
+      loop: "{{ sgs['security_groups'] }}"
+      loop_control:
+        label: "{{ item.group_id }}"
+
+    - name: Ensure the security groups are deleted
+      ec2_group:
+        region: us-west-2
+        group_id: "{{ item }}"
+        state: absent
+      loop: "{{ sg_ids }}"
+
+    - name: Ensure the internet gateway is deleted
+      ec2_vpc_igw:
+        vpc_id: "{{ ansible_vpc.vpcs[0].id }}"
+        region: us-west-2
+        tags:
+          Name: "ansible-igw"
+          project: ansible-poc
+          environment: dev
+        state: absent
+
+    - name: Ensure the subnet is deleted
+      ec2_vpc_subnet:
+        region: us-west-2
+        cidr: 10.0.1.0/24
+        vpc_id: "{{ ansible_vpc.vpcs[0].id }}"
+        tags:
+          Name: ansible-subnet
+          project: ansible-poc
+          environment: dev
+        state: absent
+
+    - name: Ensure the default route to IGW is deleted
+      ec2_vpc_route_table:
+        vpc_id: "{{ ansible_vpc.vpcs[0].id }}"
+        region: us-west-2
+        tags:
+          Name: ansible-public-subnet
+        state: absent
+
+    - name: Ensure the VPC is deleted
+      ec2_vpc_net:
+        name: ansible
+        region: us-west-2
+        cidr_block: 10.0.0.0/16
+        tags:
+          Name: ansible-vpc
+          project: ansible-poc
+          environment: dev
+        state: absent
+
+
