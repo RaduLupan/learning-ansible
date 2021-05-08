@@ -4,24 +4,24 @@
   connection: local
 
   vars:
-    ec2:ids: []
+    ec2_ids: []
     sg_ids: []
 
   tasks:
     - name: Get VPC info
       ec2_vpc_net_info:
-      region: us-west-2
-      filters: 
-        "tag:Name": ansible
+        region: us-west-2
+        filters: 
+          "tag:Name": ansible
       register: ansible_vpc
 
     - name: Get EC2 instance info
       ec2_instance_info:
-      region: us-west-2
-      filters: 
-        "tag:project": ansible-poc
-        "tag:environment": dev
-        instance-state-name: [ "running"]
+        region: us-west-2
+        filters: 
+          "tag:project": ansible-poc
+          "tag:environment": dev
+          instance-state-name: [ "running"]
       register: ec2
 
     - set_fact:
@@ -36,21 +36,27 @@
         release_on_disassociation: yes
         device_id: "{{ item }}"
         state: absent
-      with_items: "{{ ec2_ids }}" 
+      with_items: "{{ ec2_ids }}"
 
-    - name: Sleep for 30 seconds
+    - name: Ensure the EC2 instances are terminated
+      ec2:
+        region: us-west-2
+        instance_ids: "{{ ec2_ids }}"
+        state: absent
+
+    - name: Sleep for 45 seconds
       wait_for: 
-        timeout: 30
+        timeout: 45
       delegate_to: localhost
 
     - name: Get security groups info
       ec2_group_info:
-      region: us-west-2
-      filters:
-        group_name:
-          - webserver
-          - redis
-        vpc-id: "{{ ansible_vpc.vpcs[0].id }}"
+        region: us-west-2
+        filters:
+          group_name:
+           - windows-sg
+           - linux-sg
+          vpc-id: "{{ ansible_vpc.vpcs[0].id }}"
       register: sgs
 
     - set_fact:
@@ -68,8 +74,8 @@
 
     - name: Ensure the internet gateway is deleted
       ec2_vpc_igw:
-        vpc_id: "{{ ansible_vpc.vpcs[0].id }}"
         region: us-west-2
+        vpc_id: "{{ ansible_vpc.vpcs[0].id }}"
         tags:
           Name: "ansible-igw"
           project: ansible-poc
@@ -95,6 +101,11 @@
           Name: ansible-public-subnet
         state: absent
 
+    - name: Sleep for 45 seconds
+      wait_for: 
+        timeout: 45
+      delegate_to: localhost
+
     - name: Ensure the VPC is deleted
       ec2_vpc_net:
         name: ansible
@@ -105,5 +116,3 @@
           project: ansible-poc
           environment: dev
         state: absent
-
-
