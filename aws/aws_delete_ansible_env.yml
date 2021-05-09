@@ -44,9 +44,11 @@
         instance_ids: "{{ ec2_ids }}"
         state: absent
 
-    - name: Sleep for 45 seconds
+    # Waits for instances to reach Terminated state. If terminating Windows instances it may take longer than 60 seconds to get from Shutting-down to Terminated
+    # which means that the deletion of security group will fail with dependency error. 
+    - name: Sleep for 60 seconds
       wait_for: 
-        timeout: 45
+        timeout: 60
       delegate_to: localhost
 
     - name: Get security groups info
@@ -93,18 +95,13 @@
           environment: dev
         state: absent
 
-    - name: Ensure the default route to IGW is deleted
+    - name: Ensure the route table is deleted
       ec2_vpc_route_table:
         vpc_id: "{{ ansible_vpc.vpcs[0].id }}"
         region: us-west-2
         tags:
-          Name: ansible-public-subnet
+          Name: ansible-public
         state: absent
-
-    - name: Sleep for 45 seconds
-      wait_for: 
-        timeout: 45
-      delegate_to: localhost
 
     - name: Ensure the VPC is deleted
       ec2_vpc_net:
