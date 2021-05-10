@@ -1,0 +1,12 @@
+- hosts: localhost
+  gather_facts: false
+  connection: local
+
+- name: '[AWS] create VPC'
+  import_playbook: aws_create_vpc.yml
+
+- name: '[AWS] create Windows instance'
+  import_playbook: aws_create_windows_ec2_instance.yml
+
+- name: '[AWS] create Linux instance'
+  import_playbook: aws_create_linux_ec2_instance.yml 
