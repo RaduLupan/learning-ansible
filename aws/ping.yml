@@ -2,7 +2,7 @@
 - hosts: all
   gather_facts: false
 
-  vars_prmpt:
+  vars_prompt:
     - name: password
       prompt: "Enter ansible user password"
 
