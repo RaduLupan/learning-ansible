@@ -5,6 +5,7 @@
   vars_prompt:
     - name: user
       prompt: "Enter SSH user"
+      private: no
     - name: password
       prompt: "Enter SSH user password"
 
