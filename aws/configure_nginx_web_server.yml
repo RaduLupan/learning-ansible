@@ -1,0 +1,36 @@
+---
+- hosts: all
+  gather_facts: false
+
+  vars_prompt:
+    - name: user
+      prompt: "Enter SSH user"
+      private: no
+    - name: password
+      prompt: "Enter SSH user password"
+
+  vars:
+    ansible_user: "{{ user }}"
+    ansible_password: "{{ password }}"
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+
+  tasks:
+  - name: "Ensure nginx is installed"
+    package:
+      name:
+        - nginx
+      state: latest
+    become: true
+
+  - name: "Ensure index.html is present in the html folder"
+    copy:
+      src: index.html
+      dest: /usr/share/nginx/html/index.html
+      mode: 0644
+    become: true
+
+  - name: "Ensure nginx service is started"
+    service:
+      name: nginx
+      state: started
+    become: true
