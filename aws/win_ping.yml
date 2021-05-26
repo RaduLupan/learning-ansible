@@ -3,11 +3,14 @@
   gather_facts: false
 
   vars_prompt:
+    - name: user
+      prompt: "Enter local WinRM user"
+      private: no
     - name: password
-      prompt: "Enter ansible user password"
+      prompt: "Enter local WinRM user password"
 
   vars:
-    ansible_user: ansible
+    ansible_user: "{{ user }}"
     ansible_password: "{{ password }}"
     ansible_connection: winrm
     ansible_winrm_transport: ntlm
