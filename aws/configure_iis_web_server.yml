@@ -1,0 +1,47 @@
+---
+- hosts: all
+
+  vars_prompt:
+    - name: username
+      prompt: "Enter local user name"
+      private: false
+    - name: password
+      prompt: "Enter local user password"
+
+  vars:
+    ansible_user: "{{ username }}"
+    ansible_password: "{{ password }}"
+    ansible_connection: winrm
+    ansible_winrm_transport: ntlm
+    ansible_winrm_server_cert_validation: ignore
+
+  tasks:
+    - name: Ensure IIS is present
+      win_feature:
+        name: web-server
+        include_management_tools: true
+        include_sub_features: true
+        state: present
+
+    - name: Ensure index.html is present in wwwroot folder
+      win_copy:
+        src: index.html
+        dest: C:\inetpub\wwwroot\index.html
+        force: true
+
+    - name: Ensure logs directory exists
+      win_file: 
+        path: C:\logs
+        state: directory
+
+    - name: Ensure Dot Net Core IIS hosting module is installed
+      win_chocolatey:
+        name: "dotnetcore-windowshosting"
+        version: "3.1.0"
+        install_args: "OPT_NO_RUNTIME=1 OPT_NO_SHAREDFX=1 OPT_NO_X86=1 OPT_NO_SHARED_CONFIG_CHECK=1"
+        state: present
+      notify: Restart IIS
+
+  handlers:
+    - name: Restart IIS
+      win_shell: '& {iisreset}'
