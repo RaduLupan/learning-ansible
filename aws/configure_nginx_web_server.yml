@@ -20,17 +20,17 @@
         name:
           - nginx
         state: latest
-      become: yes
+      become: true
 
     - name: Ensure index.html is present in the html folder
       copy:
         src: index.html
         dest: /usr/share/nginx/html/index.html
         mode: 0644
-      become: yes
+      become: true
 
     - name: Ensure nginx service is started
       service:
         name: nginx
         state: started
-      become: yes
+      become: true
