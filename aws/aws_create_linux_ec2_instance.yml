@@ -63,6 +63,8 @@
       ec2:
         key_name: aws-ansible-key
         instance_type: t3.micro
+        # Amazon Linux 2 AMI. For CentOS, RHEL or Amazon Linux check this article on how to enable the Extra Packages for Enterprise Linux (EPEL) repository.
+        # https://aws.amazon.com/premiumsupport/knowledge-center/ec2-enable-epel/
         image: ami-001628438d5d7d524
         region: us-west-2
         group: linux-sg
@@ -77,6 +79,7 @@
           sudo cat tmp_sshd_config > /etc/ssh/sshd_config
           rm -f tmp_sshd_config
           sudo service sshd restart
+          sudo amazon-linux-extras install epel -y
         wait: yes
         assign_public_ip: yes
         instance_tags:
