@@ -31,3 +31,23 @@ ansible-playbook win_ping_no_vars.yml -i hosts --limit ec2-35-81-135-106.us-west
 ansible-playbook win_ping_no_vars.yml -i hosts --limit windows
 ansible-playbook ping_no_vars.yml -i hosts --limit linux
 ```
+### Ad-hoc command with debug module -> verify if the host variable ip is loading
+```
+ansible all -i hosts -m debug -a "var=ip"
+```
+### ansible-inventory --list -> list of the hosts along with their variables, it combines all the vars and lists them alongside the host entries
+```
+ansible-inventory -i hosts --list
+```
+### ansible-vault encrypt -> encrypt a file
+```
+ansible-vault encrypt group_vars/linux.yml
+```
+### ansible-vault edit -> edit an encrypted file (uses vi editor)
+```
+ansible-vault edit group_vars/linux.yml
+```
+### ansible-vault decrypt -> decrypt encrypted file
+```
+ansible-vault decrypt group_vars/linux.yml
+```
