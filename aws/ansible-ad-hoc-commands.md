@@ -22,3 +22,5 @@ ansible localhost -m debug -a "msg={{lookup('file', '/ansible/to-dos.md') }}"
 ```
 ansible localhost -m file -a "path=/ansible/to-dos.md state=absent"
 ```
+## Run a playbook against an inventory limited to certain hosts (only hit the Windows host for example)
+ansible-playbook win_ping_no_vars.yml -i hosts --limit ec2-35-81-135-106.us-west-2.compute.amazonaws.com
