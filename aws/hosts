@@ -1,18 +1,6 @@
 # aws
-[linux:vars]
-ansible_user=ansible
-ansible_password='AzureRocks2021!!'
-ansible_ssh_common_args='-o StrictHostKeyChecking=no'
-
 [linux]
 ec2-34-208-152-27.us-west-2.compute.amazonaws.com 
-
-[windows:vars]
-ansible_user=ansible
-ansible_password='AzureRocks2021!!'
-ansible_connection=winrm
-ansible_winrm_transport=ntlm
-ansible_winrm_server_cert_validation=ignore
 
 [windows]
 ec2-35-81-135-106.us-west-2.compute.amazonaws.com 
