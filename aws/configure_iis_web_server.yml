@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: linux
 
   vars_prompt:
     - name: username
