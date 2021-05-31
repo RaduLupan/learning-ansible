@@ -51,3 +51,11 @@ ansible-vault edit group_vars/linux.yml
 ```
 ansible-vault decrypt group_vars/linux.yml
 ```
+### Create encrypted password
+```
+echo -n '<Password>' | ansible-vault encrypt_string --stdin-name 'ansible_password'
+```
+### Use the debug module to output the decrypted variable
+```
+ansible all -i hosts -m debug -a "var=ansible_password" --ask-vault-pass
+```
