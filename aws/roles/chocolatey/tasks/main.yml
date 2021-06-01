@@ -1,0 +1,11 @@
+---
+- name: Register Windows TEMP environment variable
+  win_shell: $env:TEMP
+  register: temp_out
+  changed_when: false
+
+- name: Register Windows PROGRAMDATA environment variable
+  win_shell: $env:PROGRAMDATA
+  register: programData_out
+  changed_when: false
+  
