@@ -1,5 +1,5 @@
 ---
-- hosts: windows
+- hosts: linux
   gather_facts: false
 
   vars:
