@@ -14,3 +14,14 @@
 
 - set_fact:
     temp_location: "{{ temp_out.stdout | trim  }}"
+
+- name: Copy ChocolateyInstall.ps1
+  win_copy:
+    src: ChocolateyInstall.ps1
+    dest: "{{ temp_location + '\\ChocolateyInstall.ps1' }}"
+
+- name: Enure chocolatey is present
+  win_chocolatey:
+    name: chocolatey
+    state: present
+    source: "{{ temp_location + '\\ChocolateyInstall.ps1' }}"
