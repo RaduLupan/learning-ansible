@@ -25,3 +25,16 @@
     name: chocolatey
     state: present
     source: "{{ temp_location + '\\ChocolateyInstall.ps1' }}"
+
+- name: Copy chocolatey.extension
+  win_copy: 
+    src: chocolatey-core.extension.1.3.5.1.nupkg
+    dest: "{{ temp_location + '\\chocolatey-core.extension.1.3.5.1.nupkg' }}"
+  tags: chocolateyExtension
+
+- name: Ensure chocolatey.extension is present
+  win_chocolatey:
+    name: chocolatey-core.extension
+    state: present
+    source: "{{ temp_location + '\\chocolatey-core.extension.1.3.5.1.nupkg' }}"
+  tags: chocolateyExtension
