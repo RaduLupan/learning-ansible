@@ -59,3 +59,7 @@ echo -n '<Password>' | ansible-vault encrypt_string --stdin-name 'ansible_passwo
 ```
 ansible all -i hosts -m debug -a "var=ansible_password" --ask-vault-pass
 ```
+### Use ansible galaxy init to generate the role directory structure
+```
+ansible-galaxy init chocolatey --offline
+```
