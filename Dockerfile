@@ -6,6 +6,7 @@ RUN  yum check-update; \
    yum clean all; \
    yum install -y sshpass; \
    yum install git -y; \
+   yum install jq -y; \
    pip3 install --upgrade pip
 
 RUN pip3 install "ansible==2.9.12"; \
