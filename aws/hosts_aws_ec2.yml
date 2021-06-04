@@ -4,6 +4,13 @@ regions:
   - us-west-2
 filters:
   tag:project: ansible-poc
-groups:
-  windows: "'Win' in tags.Name"
-  linux: "'Lin' in tags.Name"
+
+# Dynamic groups with fixed membership. New hosts whose Name tag does not match will not be added to the group.
+# groups:
+#  windows: "'Win' in tags.Name"
+#  linux: "'Lin' in tags.Name"
+
+# Dynamic groups with dynamic membership. New hosts that have an os tag will be added to groups.
+keyed_groups: 
+  - key: tags.os
+    separator: ""
