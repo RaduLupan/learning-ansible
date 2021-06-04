@@ -4,3 +4,6 @@ regions:
   - us-west-2
 filters:
   tag:project: ansible-poc
+groups:
+  windows: "'Win' in tags.Name"
+  linux: "'Lin' in tags.Name"
