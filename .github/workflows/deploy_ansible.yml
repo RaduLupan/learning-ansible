@@ -1,14 +1,6 @@
 ---
 name: Deploy Ansible
 on: [push, pull_request]
-#on: 
-#  push: 
-#    branches:
-#    - master
-#  pull_request:
-#    branches:
-#    - master
-
 
 jobs:
   deploy:
@@ -16,4 +8,5 @@ jobs:
     steps:
     - name: Check out repository code
       uses: actions/checkout@v2
-    - uses: ./.github/actions/ansible
+    - name: Docker action
+      uses: ./aws/  # Uses an action in the aws directory
