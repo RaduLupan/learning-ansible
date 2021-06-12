@@ -1,5 +1,5 @@
 ---
--name: '[Linux] configure Nginx'
+- name: '[Linux] configure Nginx'
   import_playbook: configure_nginx_web_server.yml
 
 - hosts: windows
