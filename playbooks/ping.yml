@@ -16,4 +16,4 @@
 
   tasks:
   - name: run ping
-    ping: 
+    ping:
