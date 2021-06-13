@@ -1,2 +1,5 @@
 # Ignore private key files
 *.pem
+
+# Ignore .vagrant folder
+*.vagrant/*
