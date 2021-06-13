@@ -1,5 +1,5 @@
 # Ignore private key files
 *.pem
 
-# Ignore .vagrant folder
+# Ignore .vagrant folder anywhere in the repo
 **/.vagrant/*
